@@ -111,9 +111,12 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
         double rho = meas_package.raw_measurements_[0];
         double theta = meas_package.raw_measurements_[1];
         double rhodot = meas_package.raw_measurements_[2];
+        double vx = rhodot * cos(theta);
+        double vy = rhodot * sin(theta);
+        double v = sqrt(vx * vx + vy * vy);
         // Can tuning
-        x_ << rho * cos(theta), rho * sin(theta), 0., 0., 0.;
-        //x_ << rho * cos(theta), rho * sin(theta), 10., rhodot * cos(theta), rhodot * sin(theta);
+        //x_ << rho * cos(theta), rho * sin(theta), 0., 0., 0.;
+        x_ << rho * cos(theta), rho * sin(theta), v, vx, vy;
         P_.fill(0.0);
         // The state covariance matrix P_ for RADAR
         P_(0,0) = std_radr_ * std_radr_;
